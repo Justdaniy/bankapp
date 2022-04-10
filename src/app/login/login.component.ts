@@ -34,17 +34,41 @@ pswdChange(event:any){
   console.log(this.pswd);
   
   }
-// login - using event binding
-login(){
+// // login - using event binding
+// login(){
+//   //user entered acno and pswd
+//   var acno=this.acno
+//   var pswd=this.pswd
+
+// let database=this.database
+
+// if (acno in database) {
+//   if (pswd == database[acno]["password"]) {
+//     alert("login succefull!!!")
+//   }
+//    else {
+//     alert("incorrect password!!!")
+//   }
+// }
+// else{
+//   alert("user does not exist!!!")
+// }
+// }
+
+
+// login - using template referencing variable
+login(a:any,p:any){
+  console.log(a.value);
+  
   //user entered acno and pswd
-  var acno=this.acno
-  var pswd=this.pswd
+  var acno=a.value
+  var pswd=p.value
 
 let database=this.database
 
 if (acno in database) {
   if (pswd == database[acno]["password"]) {
-    
+    alert("login succefull!!!")
   }
    else {
     alert("incorrect password!!!")
