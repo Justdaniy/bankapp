@@ -6,8 +6,9 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-   
-acno=""  //its a property of class
+  
+  // properties of class
+acno=""  
 pswd=""
 
   //database
@@ -57,12 +58,37 @@ pswdChange(event:any){
 
 
 // login - using template referencing variable
-login(a:any,p:any){
-  console.log(a.value);
+// login(a:any,p:any){
+//   console.log(a.value);
+  
+//   //user entered acno and pswd
+//   var acno=a.value
+//   var pswd=p.value
+
+// let database=this.database
+
+// if (acno in database) {
+//   if (pswd == database[acno]["password"]) {
+//     alert("login succefull!!!")
+//   }
+//    else {
+//     alert("incorrect password!!!")
+//   }
+// }
+// else{
+//   alert("user does not exist!!!")
+// }
+// }
+
+
+//two way binding using ngModel
+login(){
   
   //user entered acno and pswd
-  var acno=a.value
-  var pswd=p.value
+  var acno=this.acno
+  console.log(acno);
+  
+  var pswd=this.pswd
 
 let database=this.database
 
