@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { DataService } from '../services/data.service';
 
 @Component({
   selector: 'app-login',
@@ -12,15 +13,8 @@ export class LoginComponent implements OnInit {
 acno=""  
 pswd=""
 
-  //database
-   database:any={
-     1000:{acno:1000,uname:"ajith",password:1000,balance:4000},
-     1001:{acno:1001,uname:"ismail",password:1001,balance:4005},
-     1002:{acno:1002,uname:"sami",password:1002,balance:4002},
-     1003:{acno:1003,uname:"bijo",password:1003,balance:4040}
-
-   }
-  constructor(private router:Router) { }
+  
+  constructor(private router:Router, private ds:DataService) { }
 
   ngOnInit(): void {
   }
@@ -91,7 +85,7 @@ login(){
   
   var pswd=this.pswd
 
-let database=this.database
+let database=this.ds.database
 
 if (acno in database) {
   if (pswd == database[acno]["password"]) {
