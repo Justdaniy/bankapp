@@ -85,19 +85,12 @@ login(){
   
   var pswd=this.pswd
 
-let database=this.ds.database
-
-if (acno in database) {
-  if (pswd == database[acno]["password"]) {
-    alert("login succefull!!!")
+const result= this.ds.login(acno,pswd)
+if (result) {
+  alert("login succefull!!!")
     this.router.navigateByUrl("dashboard")
-  }
-   else {
-    alert("incorrect password!!!")
-  }
 }
-else{
-  alert("user does not exist!!!")
-}
+
+
 }
 }
