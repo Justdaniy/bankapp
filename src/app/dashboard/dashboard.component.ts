@@ -34,6 +34,13 @@ deposit(){
 }
 
 withdraw(){
-  alert("withdraw")
+  var acno = this.acno1
+  var pswd =this.pswd1
+  var amount = this.amount1
+  
+  const result=this.ds.withdraw(acno,pswd,amount)
+  if (result) {
+    alert(amount +"succesfully withdrawed...and new balance is: "+ result)
+  }
 }
 }
