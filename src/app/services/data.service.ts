@@ -5,12 +5,15 @@ import { Injectable } from '@angular/core';
 })
 export class DataService {
 
+  currentUser:any
+  currentAcno:any
+
 //database
 database:any={
-  1000:{acno:1000,uname:"ajith",password:1000,balance:5000},
-  1001:{acno:1001,uname:"ismail",password:1001,balance:5000},
-  1002:{acno:1002,uname:"sami",password:1002,balance:5000},
-  1003:{acno:1003,uname:"bijo",password:1003,balance:5000}
+  1000:{acno:1000,uname:"ajith",password:1000,balance:5000,transaction:[]},
+  1001:{acno:1001,uname:"ismail",password:1001,balance:5000,transaction:[]},
+  1002:{acno:1002,uname:"sami",password:1002,balance:5000,transaction:[]},
+  1003:{acno:1003,uname:"bijo",password:1003,balance:5000,transaction:[]}
 
 }
 
@@ -27,7 +30,8 @@ database:any={
         acno,
         uname,
         password,
-        balance:0
+        balance:0,
+        transaction:[]
       }
       console.log(database);
       return true
@@ -45,6 +49,8 @@ let database=this.database
 
 if (acno in database) {
   if (pswd == database[acno]["password"]) {
+    this.currentUser=database[acno]["uname"]
+    this.currentAcno=acno //to assign acno into currentAcno to to get the acno of login person to know whose transaction history is needed
     //already exist
     return true
   }
@@ -69,6 +75,12 @@ deposit(acno:any,pswd:any,amt:any){
 if (acno in database) {
   if (pswd == database[acno]["password"]) {
    database[acno]["balance"]+= amount
+   database[acno]["transaction"].push({   //to insert type and amount into transaction array we use push method
+     type:"credit",
+     amount:amount
+   })
+  // console.log(database);
+   
     return database[acno]["balance"]
   } 
   else {
@@ -95,6 +107,11 @@ if (acno in database) {
   if (pswd == database[acno]["password"]) {
     if (database[acno]["balance"]>amount) {
       database[acno]["balance"]-= amount
+      database[acno]["transaction"].push({
+        type:"debit",
+        amount:amount})
+   //     console.log(database);
+        
     return database[acno]["balance"]
     }
      else {
@@ -112,4 +129,9 @@ else {
 }
 }
 
+
+//transaction
+transaction(acno:any){
+return this.database[acno].transaction
+}
 }
