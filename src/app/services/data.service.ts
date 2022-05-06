@@ -17,7 +17,35 @@ database:any={
 
 }
 
-  constructor() { }
+  constructor() { 
+    this.getDetails()
+  }
+
+  //to save details in local storage
+  saveDetails(){
+    localStorage.setItem("database",JSON.stringify(this.database))
+    if (this.currentAcno) {
+      localStorage.setItem("currentAcno",JSON.stringify(this.currentAcno))
+    }
+    if (this.currentUser) {
+      localStorage.setItem("currentUser",JSON.stringify(this.currentUser))
+    }
+  }
+
+  //to get data from local storage
+  getDetails(){
+    if (localStorage.getItem("database")) {
+      this.database=JSON.parse(localStorage.getItem("database")||'')
+    }
+    if (localStorage.getItem("currentAcno")) {
+      this.currentAcno=JSON.parse(localStorage.getItem("currentAcno")||'')
+    }
+    if (localStorage.getItem("currentUser")) {
+      this.currentUser=JSON.parse(localStorage.getItem("currentUser")||'')
+    }
+  }
+
+
   //register
   register(uname:any, acno:any, password:any){
     let database=this.database
@@ -34,6 +62,7 @@ database:any={
         transaction:[]
       }
       console.log(database);
+      this.saveDetails()
       return true
       
     }
@@ -51,6 +80,7 @@ if (acno in database) {
   if (pswd == database[acno]["password"]) {
     this.currentUser=database[acno]["uname"]
     this.currentAcno=acno //to assign acno into currentAcno to to get the acno of login person to know whose transaction history is needed
+    this.saveDetails()
     //already exist
     return true
   }
@@ -80,7 +110,8 @@ if (acno in database) {
      amount:amount
    })
   // console.log(database);
-   
+  this.saveDetails()
+
     return database[acno]["balance"]
   } 
   else {
@@ -111,7 +142,8 @@ if (acno in database) {
         type:"debit",
         amount:amount})
    //     console.log(database);
-        
+   this.saveDetails()
+
     return database[acno]["balance"]
     }
      else {
