@@ -12,6 +12,8 @@ export class DashboardComponent implements OnInit {
 
   user:any
 
+  acno:any
+
 //deposit form model
 depositForm = this.fb.group({
   acno:['',[Validators.required,Validators.pattern('[0-9]*')]],
@@ -26,15 +28,17 @@ withdrawForm = this.fb.group({
   amount1:['',[Validators.required,Validators.pattern('[0-9]*')]]
   })
 
+loginDate:any
 
   constructor(private ds:DataService,private fb:FormBuilder, private router:Router) { 
     this.user=this.ds.currentUser
+    this.loginDate= new Date()
   }
 
   ngOnInit(): void {
     if(!localStorage.getItem("currentAcno")){
       alert("please login...")
-      this.router.navigateByUrl("")
+      this.router.navigateByUrl("") 
     }
   }
 deposit(){
@@ -68,6 +72,11 @@ withdraw(){
  else{
    alert("invalid form")
  }
+}
+
+//deletefromParent
+deletefromParent(){
+  this.acno=JSON.parse(localStorage.getItem("currentAcno")||'')
 }
 //logout
 logout(){
