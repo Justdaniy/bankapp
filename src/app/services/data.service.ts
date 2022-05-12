@@ -1,4 +1,9 @@
-import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Injectable, ɵresetJitOptions } from '@angular/core';
+
+const options={
+  headers:new HttpHeaders()
+}
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +22,7 @@ database:any={
 
 }
 
-  constructor() { 
+  constructor(private http:HttpClient ) { 
     this.getDetails()
   }
 
@@ -48,122 +53,80 @@ database:any={
 
   //register
   register(uname:any, acno:any, password:any){
-    let database=this.database
-    if (acno in database) {
-      //user already exist
-      return false
-    } else {
-      //add details into db
-      database[acno]={
-        acno,
-        uname,
-        password,
-        balance:0,
-        transaction:[]
-      }
-      console.log(database);
-      this.saveDetails()
-      return true
-      
+    const data={
+      uname,
+      acno,
+      password
     }
+    //register api call
+  return this.http.post('http://localhost:3000/register',data)
   }
 //login
 //two way binding using ngModel
 login(acno:any,pswd:any){
-  
-  //user entered acno and pswd
-  
-
-let database=this.database
-
-if (acno in database) {
-  if (pswd == database[acno]["password"]) {
-    this.currentUser=database[acno]["uname"]
-    this.currentAcno=acno //to assign acno into currentAcno to to get the acno of login person to know whose transaction history is needed
-    this.saveDetails()
-    //already exist
-    return true
+  const data={
+    acno,
+    pswd
   }
-   else {
-    alert("incorrect password!!!")
-    return false
-  }
+  return this.http.post('http://localhost:3000/login',data)
+
 }
-else{
-  alert("user does not exist!!!")
-  return false
-}
-}
+
+
 
 //deposit
 deposit(acno:any,pswd:any,amt:any){
-  
-  let database=this.database
-
-  var amount=parseInt(amt)
-
-if (acno in database) {
-  if (pswd == database[acno]["password"]) {
-   database[acno]["balance"]+= amount
-   database[acno]["transaction"].push({   //to insert type and amount into transaction array we use push method
-     type:"credit",
-     amount:amount
-   })
-  // console.log(database);
-  this.saveDetails()
-
-    return database[acno]["balance"]
-  } 
-  else {
-    alert("incorrect password")
-    return false
+  const data={
+  amt,
+    acno,
+    pswd,
   }
-} 
-else {
-  alert("user doesnt exist")
-  return false
-}
-}
+  //deposit api call
+return this.http.post('http://localhost:3000/deposit',data,this.getOptions())
+}  
 
+getOptions(){
+  //to fetch token
+const token=JSON.parse(localStorage.getItem("token")||'')
+//to create http header
+let headers=new HttpHeaders()
+//add token to req header
+if(token){
+ headers=headers.append('access-token',token)
+options.headers=headers
+}
+return options
+}
 
 
 //withdraw
 withdraw(acno:any,pswd:any,amt:any){
   
-  let database=this.database
+const data={
+    amt,
+      acno,
+      pswd
+    }    
+    //withdraw api call
+  return this.http.post('http://localhost:3000/withdraw',data,this.getOptions())
+  }  
+  
 
-  var amount=parseInt(amt)
-
-if (acno in database) {
-  if (pswd == database[acno]["password"]) {
-    if (database[acno]["balance"]>amount) {
-      database[acno]["balance"]-= amount
-      database[acno]["transaction"].push({
-        type:"debit",
-        amount:amount})
-   //     console.log(database);
-   this.saveDetails()
-
-    return database[acno]["balance"]
-    }
-     else {
-      alert("insufficient balnce!!!")
-    }
-  } 
-  else {
-    alert("incorrect password")
-    return false
-  }
-} 
-else {
-  alert("user doesnt exist")
-  return false
-}
-}
 
 
 //transaction
 transaction(acno:any){
-return this.database[acno].transaction
+  const data={
+      acno
+    
+    }    
+    //transaction api call
+  return this.http.post('http://localhost:3000/transaction',data,this.getOptions())
+}
+
+onDelete(acno:any){
+  //onDelete api call
+  return this.http.delete('http://localhost:3000/onDelete/'+acno,this.getOptions())
+
 }
 }

@@ -19,7 +19,7 @@ acno:['',[Validators.required,Validators.pattern('[0-9]*')]],
 pswd:['',[Validators.required,Validators.pattern('[a-zA-Z0-9]*')]]
 })
 
-  constructor(private db:DataService, private router: Router, private fb:FormBuilder) { }
+  constructor(private ds:DataService, private router: Router, private fb:FormBuilder) { }
 
   ngOnInit(): void {
   }
@@ -29,14 +29,18 @@ var acno=this.registerForm.value.acno
 var pswd=this.registerForm.value.pswd
 var uname=this.registerForm.value.uname
 if(this.registerForm.valid){
-  const result=this.db.register(uname,acno,pswd)
-  if (result) {
-    alert("succesfully registered")
-    this.router.navigateByUrl("")
+  //asynchronous
+   this.ds.register(uname,acno,pswd)
+  .subscribe((result:any)=>{
+    if (result) {
+      alert(result.message)
+      this.router.navigateByUrl("")
+    }
+  },
+  (result)=>{
+    alert(result.error.message )
   }
-   else {
-    alert("acount already exists..please login")
-  }
+  )
 }
 else{
   alert("invalid form")

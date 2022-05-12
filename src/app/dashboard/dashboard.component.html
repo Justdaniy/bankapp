@@ -8,18 +8,21 @@
   <h1 style="color: antiquewhite;">welcome {{user}}</h1>
   <h4>{{loginDate|date: 'medium'  |uppercase}}</h4>
   <a routerLink="/transaction">Transation history</a>
+ <!-- animation -->
+  <!-- <app-animation-demo></app-animation-demo> -->
+  
   <button (click)="deletefromParent()" style="float: right;" class="btn btn-danger">delete</button>
   <hr>
-  <app-delete-confirmation [item]="acno"></app-delete-confirmation>
+  <app-delete-confirmation (onDelete)="onDelete($event)" (onCancel)="onCancel()" [item]="acno"></app-delete-confirmation>
   
-  <div class="container col-md-12 mt-0">
+  <div [ngClass]="acno? 'style1':''  " class="container col-md-12 mt-0">
       <div class="d-flex justify-content-center h-100">
           <div class="card">
               <div class="card-header">
-                  <h3 class="text-center">deposit</h3>
+                  <h3 appHighlight class="text-center">deposit</h3>
                   
               </div>
-              <div class="card-body">
+              <div  class="card-body">
                   <form [formGroup]="depositForm" (ngSubmit)="deposit()">
 
                    
@@ -71,11 +74,11 @@
 
 
 
-  <div class="container col-md-12 mt-0">
+  <div [ngClass]="acno? 'style1':''  " class="container col-md-12 mt-0">
     <div class="d-flex justify-content-center h-75">
         <div class="card">
             <div class="card-header">
-                <h3 class="text-center">withdraw</h3>
+                <h3 appHighlight class="text-center">withdraw</h3>
                 
             </div>
             <div class="card-body">

@@ -31,27 +31,32 @@ withdrawForm = this.fb.group({
 loginDate:any
 
   constructor(private ds:DataService,private fb:FormBuilder, private router:Router) { 
-    this.user=this.ds.currentUser
+    this.user=JSON.parse(localStorage.getItem('currentUser')||'')
     this.loginDate= new Date()
   }
 
   ngOnInit(): void {
-    if(!localStorage.getItem("currentAcno")){
-      alert("please login...")
-      this.router.navigateByUrl("") 
-    }
+    // if(!localStorage.getItem("currentAcno")){
+    //   alert("please login...")
+    //   this.router.navigateByUrl("") 
+    // }
   }
 deposit(){
   var acno = this.depositForm.value.acno
   var pswd =this.depositForm.value.pswd
   var amount = this.depositForm.value.amount
 if (this.depositForm.valid) {
-  const result=this.ds.deposit(acno,pswd,amount)
-  if (result) {
-    alert(amount +"succesfully deposited...and new balance is: "+ result)
-  } else {
-    alert("error in deposit")
+  //calling deposit in dataservice
+  this.ds.deposit(acno,pswd,amount)
+  .subscribe((result:any)=>{
+    if(result){
+      alert(result.message)
+    }
+  },
+  (result)=>{
+    alert(result.error.message)
   }
+  )
 }
 else{
   alert("invalid form")
@@ -64,10 +69,17 @@ withdraw(){
   var pswd =this.withdrawForm.value.pswd1
   var amount = this.withdrawForm.value.amount1
   if (this.withdrawForm.valid) {
-    const result=this.ds.withdraw(acno,pswd,amount)
-    if (result) {
-      alert(amount +"succesfully withdrawed...and new balance is: "+ result)
+    //calling withdraw from ds
+    this.ds.withdraw(acno,pswd,amount)
+    .subscribe((result:any)=>{
+      if(result){
+        alert(result.message)
+      }
+    },
+    (result)=>{
+      alert(result.error.message)
     }
+    )
   }
  else{
    alert("invalid form")
@@ -84,4 +96,24 @@ logout(){
   localStorage.removeItem("currentAcno")
 this.router.navigateByUrl("")
 }
+
+onCancel(){
+  this.acno=""
+}
+
+onDelete(event:any){
+  //calling onDelete from ds
+  this.ds.onDelete(event)
+    .subscribe((result:any)=>{
+      if(result){
+        alert(result.message)
+        this.router.navigateByUrl("")
+      }
+    },
+    (result:any)=>{
+      alert(result.error.message)
+    }
+    )
+  }
+
 }
